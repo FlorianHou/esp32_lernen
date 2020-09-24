@@ -4,9 +4,8 @@ import sys
 import time
 import qi
 
-
 session = qi.Session()
-session.connect("tcp://127.0.0.1:12166")
+session.connect("tcp://127.0.0.1:3068")
 motion_service = session.service("ALMotion")
 posture_service = session.service("ALRobotPosture")
 motion_service.wakeUp()
