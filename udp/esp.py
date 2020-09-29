@@ -2,20 +2,20 @@ from machine import UART, Pin
 from machine import ADC
 from time import sleep_ms
 from usocket import *
+import network
 
 
-# def upd_send(data, ADD):
-#     print(data)
-#     s.sendto(data, ADD)
+def upd_send(data):
+    print(data)
+    s.sendto(data, ADD)
+    return None
 
-# s = socket(AF_INET, SOCK_DGRAM)
-# HOST = "192.168.1.101"
-# PORT = 3999
-# ADD = (HOST,PORT)
+s = socket(AF_INET, SOCK_DGRAM)
+BUFF = 1024
+HOST = "192.168.1.109"
+PORT = 4001
+ADD = (HOST,PORT)
 
-
-#UART
-uart = UART(1, baudrate=115200, bits=8, parity=None, stop=1, tx=17, rx=16, rts=-1, cts=-1, txbuf=256, rxbuf=256, timeout=1000, timeout_char=2)
 #Links Joystick
 p_l = Pin(33, Pin.IN)
 x_l = ADC(Pin(35)); x_l.atten(ADC.ATTN_11DB); x_l.width(ADC.WIDTH_12BIT)
@@ -47,7 +47,6 @@ while True:
 
     if abs(y_r_delta) < 0.05:
         y_r_delta = 0.0
-    data = str(x_l_delta, x_r_delta, y_l_delta, y_r_delta, p_l.value(), p_r.value())
-    print(x_l_delta, x_r_delta, y_l_delta, y_r_delta, p_l.value(), p_r.value())
+    data = bytes(str((x_l_delta, x_r_delta, y_l_delta, y_r_delta, p_l.value(), p_r.value())), "utf-8")
+    upd_send(data)
     sleep_ms(25)
-
